@@ -36,6 +36,7 @@ class GuestBookController extends Controller
     {
         $rules = [
             'nama' => 'required|string|max:255',
+            'asal_instansi' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
             'usia' => 'required|integer|min:10|max:100',
             'jumlah_rombongan' => 'required|string|max:50',
@@ -69,6 +70,7 @@ class GuestBookController extends Controller
 
         $guest = Guest::create([
             'nama' => $validated['nama'],
+            'asal_instansi' => $validated['asal_instansi'],
             'jenis_kelamin' => $validated['jenis_kelamin'],
             'usia' => $validated['usia'],
             'jumlah_rombongan' => $validated['jumlah_rombongan'],
@@ -144,6 +146,7 @@ class GuestBookController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('asal_instansi', 'like', "%{$search}%")
                   ->orWhere('no_whatsapp', 'like', "%{$search}%")
                   ->orWhere('bidang_tujuan', 'like', "%{$search}%")
                   ->orWhere('keperluan', 'like', "%{$search}%");

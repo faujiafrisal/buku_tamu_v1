@@ -110,11 +110,11 @@
                 <tr>
                     <th scope="col" class="py-3.5 px-4">#</th>
                     <th scope="col" class="py-3.5 px-4">Nama Lengkap</th>
+                    <th scope="col" class="py-3.5 px-4">Asal Instansi/Perusahaan</th>
                     <th scope="col" class="py-3.5 px-4">Gender</th>
                     <th scope="col" class="py-3.5 px-4">Usia</th>
                     <th scope="col" class="py-3.5 px-4">Rombongan</th>
-                    <th scope="col" class="py-3.5 px-4">Bidang Tujuan</th>
-                    <th scope="col" class="py-3.5 px-4">Keperluan Kunjungan</th>
+                    <th scope="col" class="py-3.5 px-4">Layanan & Keperluan</th>
                     <th scope="col" class="py-3.5 px-4">No WhatsApp</th>
                     <th scope="col" class="py-3.5 px-4">Waktu Presensi (WITA)</th>
                     <th scope="col" class="py-3.5 px-4 text-center">Aksi</th>
@@ -128,6 +128,11 @@
                     </td>
                     <td class="py-3.5 px-4 font-bold text-slate-900 dark:text-white">
                         {{ $guest->nama }}
+                    </td>
+                    <td class="py-3.5 px-4 font-semibold text-slate-800 dark:text-slate-200">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/80 text-amber-900 dark:text-amber-300 font-semibold text-[11px] border border-amber-200/60 dark:border-amber-800/60">
+                            <i class="fa-solid fa-building text-amber-600 dark:text-amber-400"></i> {{ $guest->asal_instansi ?? '-' }}
+                        </span>
                     </td>
                     <td class="py-3.5 px-4">
                         @if($guest->jenis_kelamin === 'Laki-Laki')
