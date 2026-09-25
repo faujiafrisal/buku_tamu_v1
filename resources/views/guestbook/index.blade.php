@@ -229,6 +229,89 @@
                 </div>
             </div>
 
+            <!-- PERTANYAAN KUSTOM (BOX FORMULIR DARI DATABASE) -->
+            @if(isset($customQuestions) && $customQuestions->count() > 0)
+                @foreach($customQuestions as $cIndex => $cQuestion)
+                    <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 space-y-3">
+                        <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+                            <span class="w-5 h-5 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold">
+                                {{ 5 + $cIndex }}
+                            </span>
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                                {{ $cQuestion->pertanyaan }}
+                            </h3>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label for="custom_q_{{ $cQuestion->id }}" class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                                <span>{{ $cQuestion->pertanyaan }} @if($cQuestion->wajib)<span class="text-rose-500">*</span>@endif</span>
+                            </label>
+
+                            @if($cQuestion->tipe_input === 'text')
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                        <i class="fa-solid fa-pen-nib text-sm"></i>
+                                    </div>
+                                    <input type="text" id="custom_q_{{ $cQuestion->id }}" name="jawaban[{{ $cQuestion->id }}]"
+                                        @if($cQuestion->wajib) required @endif
+                                        placeholder="Ketik jawaban Anda..."
+                                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:border-transparent transition-all shadow-sm text-sm font-medium">
+                                </div>
+
+                            @elseif($cQuestion->tipe_input === 'textarea')
+                                <div class="relative">
+                                    <div class="absolute top-3 left-0 pl-3.5 flex items-start pointer-events-none text-slate-400">
+                                        <i class="fa-solid fa-paragraph text-sm"></i>
+                                    </div>
+                                    <textarea id="custom_q_{{ $cQuestion->id }}" name="jawaban[{{ $cQuestion->id }}]"
+                                        @if($cQuestion->wajib) required @endif
+                                        rows="3" placeholder="Tuliskan uraian jawaban Anda..."
+                                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:border-transparent transition-all shadow-sm text-sm font-medium resize-none"></textarea>
+                                </div>
+
+                            @elseif($cQuestion->tipe_input === 'number')
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                        <i class="fa-solid fa-calculator text-sm"></i>
+                                    </div>
+                                    <input type="number" id="custom_q_{{ $cQuestion->id }}" name="jawaban[{{ $cQuestion->id }}]"
+                                        @if($cQuestion->wajib) required @endif
+                                        placeholder="Masukkan angka..."
+                                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:border-transparent transition-all shadow-sm text-sm font-medium">
+                                </div>
+
+                            @elseif($cQuestion->tipe_input === 'select')
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                        <i class="fa-solid fa-circle-chevron-down text-sm"></i>
+                                    </div>
+                                    <select id="custom_q_{{ $cQuestion->id }}" name="jawaban[{{ $cQuestion->id }}]"
+                                        @if($cQuestion->wajib) required @endif
+                                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-800 focus:border-transparent transition-all shadow-sm text-sm font-medium cursor-pointer">
+                                        <option value="">-- Pilih Pilihan --</option>
+                                        @foreach($cQuestion->opsi_array as $opt)
+                                            <option value="{{ $opt }}">{{ $opt }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                            @elseif($cQuestion->tipe_input === 'radio')
+                                <div class="space-y-2 pt-1">
+                                    @foreach($cQuestion->opsi_array as $optIndex => $opt)
+                                        <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 hover:border-blue-500/50 cursor-pointer transition-all shadow-sm">
+                                            <input type="radio" name="jawaban[{{ $cQuestion->id }}]" value="{{ $opt }}"
+                                                @if($cQuestion->wajib && $loop->first) required @endif
+                                                class="w-4 h-4 text-blue-800 focus:ring-blue-800 border-slate-300 dark:border-slate-700">
+                                            <span class="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200">{{ $opt }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+
             <!-- SUBMIT BUTTON -->
             <div class="pt-2">
                 <button type="submit" id="submitBtn"

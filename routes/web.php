@@ -9,12 +9,6 @@ Route::get('/admin', [GuestBookController::class, 'admin'])->name('guestbook.adm
 Route::get('/admin/history', [GuestBookController::class, 'history'])->name('guestbook.history');
 Route::delete('/admin/history/{guest}', [GuestBookController::class, 'destroy'])->name('guestbook.destroy');
 
-// Kelola Opsi Bidang Form
-Route::get('/admin/bidang', [GuestBookController::class, 'manageBidang'])->name('guestbook.bidang.index');
-Route::post('/admin/bidang', [GuestBookController::class, 'storeBidang'])->name('guestbook.bidang.store');
-Route::put('/admin/bidang/{bidang}', [GuestBookController::class, 'updateBidang'])->name('guestbook.bidang.update');
-Route::delete('/admin/bidang/{bidang}', [GuestBookController::class, 'destroyBidang'])->name('guestbook.bidang.destroy');
-
 // Kelola Pertanyaan Form
 Route::get('/admin/questions', [GuestBookController::class, 'manageQuestions'])->name('guestbook.questions.index');
 Route::post('/admin/questions', [GuestBookController::class, 'storeQuestion'])->name('guestbook.questions.store');

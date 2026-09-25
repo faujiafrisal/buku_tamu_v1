@@ -32,9 +32,6 @@
                 <a href="{{ route('guestbook.history') }}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center gap-1.5">
                     <i class="fa-solid fa-clock-rotate-left"></i> Histori Kunjungan
                 </a>
-                <a href="{{ route('guestbook.bidang.index') }}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-sliders"></i> Opsi Bidang
-                </a>
                 <a href="{{ route('guestbook.questions.index') }}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center gap-1.5">
                     <i class="fa-solid fa-shapes"></i> Box Formulir
                 </a>

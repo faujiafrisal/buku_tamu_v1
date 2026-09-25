@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guest;
-use App\Models\Bidang;
 use App\Models\FormQuestion;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -17,7 +16,6 @@ class GuestBookController extends Controller
      */
     public function index()
     {
-        $bidangs = Bidang::orderBy('id', 'asc')->get();
         $questions = FormQuestion::where('status', 'Aktif')
             ->orderBy('urutan', 'asc')
             ->orderBy('id', 'asc')
@@ -26,7 +24,7 @@ class GuestBookController extends Controller
         $boxMap = $questions->whereNotNull('system_key')->keyBy('system_key');
         $customQuestions = $questions->whereNull('system_key');
 
-        return view('guestbook.index', compact('bidangs', 'questions', 'boxMap', 'customQuestions'));
+        return view('guestbook.index', compact('questions', 'boxMap', 'customQuestions'));
     }
 
     /**
@@ -179,59 +177,6 @@ class GuestBookController extends Controller
         }
 
         return redirect()->back()->with('success', 'Data kunjungan berhasil dihapus secara resmi!');
-    }
-
-    /**
-     * Display dynamic form option management for Bidang.
-     */
-    public function manageBidang()
-    {
-        $bidangs = Bidang::orderBy('id', 'asc')->get();
-        return view('guestbook.manage_bidang', compact('bidangs'));
-    }
-
-    /**
-     * Store new Bidang option in database.
-     */
-    public function storeBidang(Request $request)
-    {
-        $validated = $request->validate([
-            'nama_bidang' => 'required|string|max:255|unique:bidangs,nama_bidang'
-        ], [
-            'nama_bidang.required' => 'Nama bidang wajib diisi.',
-            'nama_bidang.unique' => 'Opsi bidang ini sudah ada.'
-        ]);
-
-        Bidang::create($validated);
-
-        return redirect()->back()->with('success', 'Opsi Bidang baru berhasil ditambahkan!');
-    }
-
-    /**
-     * Update Bidang option in database.
-     */
-    public function updateBidang(Request $request, Bidang $bidang)
-    {
-        $validated = $request->validate([
-            'nama_bidang' => 'required|string|max:255|unique:bidangs,nama_bidang,' . $bidang->id
-        ], [
-            'nama_bidang.required' => 'Nama bidang wajib diisi.',
-            'nama_bidang.unique' => 'Opsi bidang ini sudah ada.'
-        ]);
-
-        $bidang->update($validated);
-
-        return redirect()->back()->with('success', 'Opsi Bidang berhasil diperbarui!');
-    }
-
-    /**
-     * Delete Bidang option from database.
-     */
-    public function destroyBidang(Bidang $bidang)
-    {
-        $bidang->delete();
-
-        return redirect()->back()->with('success', 'Opsi Bidang berhasil dihapus!');
     }
 
     /**

@@ -37,9 +37,6 @@
                 <a href="{{ route('guestbook.history') }}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center gap-1.5">
                     <i class="fa-solid fa-clock-rotate-left"></i> Histori
                 </a>
-                <a href="{{ route('guestbook.bidang.index') }}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-sliders"></i> Opsi Bidang
-                </a>
                 <a href="{{ route('guestbook.questions.index') }}" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-900 text-amber-400 shadow-sm transition-all flex items-center gap-1.5">
                     <i class="fa-solid fa-shapes text-amber-400"></i> Box Formulir
                 </a>
@@ -272,7 +269,7 @@
                             @endif
                         </td>
                         <td class="py-3.5 px-4 text-center whitespace-nowrap">
-                            <button type="button" onclick="openEditQuestionModal({{ json_encode($q) }})" title="Edit Pertanyaan" class="py-1.5 px-2.5 rounded-lg bg-amber-500/10 hover:bg-amber-500 text-amber-600 hover:text-white dark:text-amber-400 border border-amber-500/20 text-xs font-bold transition-all cursor-pointer mr-1">
+                            <button type="button" onclick="openEditBoxModal({{ json_encode($q) }})" title="Edit Pertanyaan" class="py-1.5 px-2.5 rounded-lg bg-amber-500/10 hover:bg-amber-500 text-amber-600 hover:text-white dark:text-amber-400 border border-amber-500/20 text-xs font-bold transition-all cursor-pointer mr-1">
                                 <i class="fa-solid fa-pen-to-square"></i>
                             </button>
                             @if($q->system_key)
