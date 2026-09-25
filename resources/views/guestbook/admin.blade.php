@@ -225,6 +225,7 @@
                     <tr>
                         <th scope="col" class="py-3 px-4">Nama Lengkap</th>
                         <th scope="col" class="py-3 px-4">Asal Instansi/Perusahaan</th>
+                        <th scope="col" class="py-3 px-4">Bidang / Orang Ditemui</th>
                         <th scope="col" class="py-3 px-4">Gender</th>
                         <th scope="col" class="py-3 px-4">Layanan & Keperluan</th>
                         <th scope="col" class="py-3 px-4">Waktu Presensi</th>
@@ -239,6 +240,11 @@
                         <td class="py-3 px-4 font-semibold text-slate-800 dark:text-slate-200">
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/80 text-amber-900 dark:text-amber-300 font-semibold text-[11px] border border-amber-200/60 dark:border-amber-800/60">
                                 <i class="fa-solid fa-building text-amber-600 dark:text-amber-400"></i> {{ $guest->asal_instansi ?? '-' }}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 font-semibold text-slate-800 dark:text-slate-200">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/80 text-indigo-900 dark:text-indigo-300 font-semibold text-[11px] border border-indigo-200/60 dark:border-indigo-800/60">
+                                <i class="fa-solid fa-user-gear text-indigo-600 dark:text-indigo-400"></i> {{ $guest->bidang_orang_ditemui ?? '-' }}
                             </span>
                         </td>
                         <td class="py-3 px-4">
@@ -261,7 +267,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="py-6 text-center text-slate-500 dark:text-slate-400">
+                        <td colspan="6" class="py-6 text-center text-slate-500 dark:text-slate-400">
                             <p class="font-bold text-xs">Belum ada data kunjungan terbaru.</p>
                         </td>
                     </tr>

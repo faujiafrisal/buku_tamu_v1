@@ -88,7 +88,7 @@
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <i class="fa-solid fa-magnifying-glass text-xs"></i>
                     </div>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, WA, bidang, keperluan..."
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, instansi, orang ditemui, WA, keperluan..."
                         class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-800 text-xs font-medium shadow-sm">
                 </div>
                 <button type="submit" class="py-2.5 px-4 rounded-xl bg-blue-900 text-amber-400 font-bold text-xs shadow-sm hover:bg-blue-800 transition-all flex items-center justify-center gap-1 cursor-pointer">
@@ -111,6 +111,7 @@
                     <th scope="col" class="py-3.5 px-4">#</th>
                     <th scope="col" class="py-3.5 px-4">Nama Lengkap</th>
                     <th scope="col" class="py-3.5 px-4">Asal Instansi/Perusahaan</th>
+                    <th scope="col" class="py-3.5 px-4">Bidang / Orang Ditemui</th>
                     <th scope="col" class="py-3.5 px-4">Gender</th>
                     <th scope="col" class="py-3.5 px-4">Usia</th>
                     <th scope="col" class="py-3.5 px-4">Rombongan</th>
@@ -134,6 +135,11 @@
                             <i class="fa-solid fa-building text-amber-600 dark:text-amber-400"></i> {{ $guest->asal_instansi ?? '-' }}
                         </span>
                     </td>
+                    <td class="py-3.5 px-4 font-semibold text-slate-800 dark:text-slate-200">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/80 text-indigo-900 dark:text-indigo-300 font-semibold text-[11px] border border-indigo-200/60 dark:border-indigo-800/60">
+                            <i class="fa-solid fa-user-gear text-indigo-600 dark:text-indigo-400"></i> {{ $guest->bidang_orang_ditemui ?? '-' }}
+                        </span>
+                    </td>
                     <td class="py-3.5 px-4">
                         @if($guest->jenis_kelamin === 'Laki-Laki')
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300 text-[11px] font-bold">
@@ -153,11 +159,6 @@
                     <td class="py-3.5 px-4">
                         <span class="text-slate-600 dark:text-slate-400 font-semibold">
                             <i class="fa-solid fa-user-group text-[10px] mr-1 text-amber-500"></i> {{ $guest->jumlah_rombongan }}
-                        </span>
-                    </td>
-                    <td class="py-3.5 px-4 font-medium text-slate-800 dark:text-slate-200">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/80 text-indigo-900 dark:text-indigo-300 font-semibold text-[11px] border border-indigo-200/60 dark:border-indigo-800/60">
-                            <i class="fa-solid fa-building-user text-indigo-600 dark:text-indigo-400"></i> {{ $guest->bidang_tujuan ?? '-' }}
                         </span>
                     </td>
                     <td class="py-3.5 px-4 text-slate-700 dark:text-slate-300 max-w-xs">
@@ -194,7 +195,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="10" class="py-12 text-center text-slate-500 dark:text-slate-400">
+                    <td colspan="11" class="py-12 text-center text-slate-500 dark:text-slate-400">
                         <i class="fa-solid fa-folder-open text-4xl mb-3 text-slate-300 dark:text-slate-600"></i>
                         <p class="font-bold text-sm">Tidak ada data histori kunjungan.</p>
                         <p class="text-xs text-slate-400 mt-1">Coba gunakan kata kunci pencarian lain atau tambahkan data presensi baru.</p>

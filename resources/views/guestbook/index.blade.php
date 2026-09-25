@@ -24,7 +24,7 @@
         <form id="guestForm" action="{{ route('guestbook.store') }}" method="POST" class="space-y-4">
             @csrf
 
-            <!-- SUB-SECTION 1: DATA DIRI -->
+            <!-- SUB-SECTION 1: DATA DIRI & IDENTITAS PENGUNJUNG -->
             <div
                 class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 space-y-4">
                 <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
@@ -34,7 +34,7 @@
                         Pengunjung</h3>
                 </div>
 
-                <!-- Nama Lengkap Field -->
+                <!-- 1. Nama Lengkap Field -->
                 <div class="space-y-1.5">
                     <label for="namaInput"
                         class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -49,9 +49,39 @@
                     </div>
                 </div>
 
+                <!-- 2. Asal Instansi/Perusahaan Field -->
+                <div class="space-y-1.5">
+                    <label for="instansiInput"
+                        class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <span>Asal Instansi/Perusahaan <span class="text-rose-500">*</span></span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-building text-sm"></i>
+                        </div>
+                        <input type="text" id="instansiInput" name="asal_instansi" required
+                            placeholder="Masukkan asal instansi/perusahaan"
+                            class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:border-transparent transition-all shadow-sm text-sm font-medium">
+                    </div>
+                </div>
 
+                <!-- 3. Bidang / Orang yang Ditemui Field -->
+                <div class="space-y-1.5">
+                    <label for="ditemuiInput"
+                        class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <span>Bidang / Orang yang Ditemui <span class="text-rose-500">*</span></span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-user-gear text-sm"></i>
+                        </div>
+                        <input type="text" id="ditemuiInput" name="bidang_orang_ditemui" required
+                            placeholder="Contoh: Bidang Perizinan / Bapak Ahmad"
+                            class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:border-transparent transition-all shadow-sm text-sm font-medium">
+                    </div>
+                </div>
 
-                <!-- Jenis Kelamin Field -->
+                <!-- 4. Jenis Kelamin Field -->
                 <div class="space-y-1.5">
                     <label class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
                         <span>Jenis Kelamin <span class="text-rose-500">*</span></span>
@@ -142,31 +172,12 @@
                 </div>
             </div>
 
-            <!-- Asal Instansi/Perusahaan Field -->
-            <div
-                class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 space-y-4">
-                <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
-                    <span
-                        class="w-5 h-5 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold">3</span>
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Asal
-                        Instansi/Perusahaan</h3>
-                </div>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                        <i class="fa-solid fa-building text-sm"></i>
-                    </div>
-                    <input type="text" id="instansiInput" name="asal_instansi" required
-                        placeholder="Masukkan asal instansi/perusahaan"
-                        class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-800 focus:border-transparent transition-all shadow-sm text-sm font-medium">
-                </div>
-            </div>
-
             <!-- SUB-SECTION 3: LAYANAN & KEPERLUAN -->
             <div
                 class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 space-y-4">
                 <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
                     <span
-                        class="w-5 h-5 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold">4</span>
+                        class="w-5 h-5 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold">3</span>
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Layanan &
                         Keperluan</h3>
                 </div>
@@ -188,12 +199,12 @@
                 </div>
             </div>
 
-            <!-- SUB-SECTION 7: KONTAK PENGUNJUNG -->
+            <!-- SUB-SECTION 4: KONTAK PENGUNJUNG -->
             <div
                 class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 space-y-3">
                 <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
                     <span
-                        class="w-5 h-5 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold">5</span>
+                        class="w-5 h-5 rounded-full bg-blue-800 text-white flex items-center justify-center text-[10px] font-bold">4</span>
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Kontak
                         Pengunjung</h3>
                 </div>
@@ -353,9 +364,9 @@
 
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = `
-                                                                                                <i class="fa-solid fa-circle-notch animate-spin text-lg text-amber-400"></i>
-                                                                                                <span>MENYIMPAN DATA PRESENSI...</span>
-                                                                                            `;
+                                                                                                            <i class="fa-solid fa-circle-notch animate-spin text-lg text-amber-400"></i>
+                                                                                                            <span>MENYIMPAN DATA PRESENSI...</span>
+                                                                                                        `;
 
                 const formData = new FormData(guestForm);
 
@@ -388,10 +399,10 @@
             function resetSubmitButton() {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `
-                                                                                                <i class="fa-solid fa-paper-plane text-amber-400"></i>
-                                                                                                <span>SIMPAN DATA KEHADIRAN</span>
-                                                                                                <i class="fa-solid fa-arrow-right text-xs text-amber-400"></i>
-                                                                                            `;
+                                                                                                            <i class="fa-solid fa-paper-plane text-amber-400"></i>
+                                                                                                            <span>SIMPAN DATA KEHADIRAN</span>
+                                                                                                            <i class="fa-solid fa-arrow-right text-xs text-amber-400"></i>
+                                                                                                        `;
             }
 
             function handleFormSuccess() {
