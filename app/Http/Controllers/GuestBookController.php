@@ -39,13 +39,12 @@ class GuestBookController extends Controller
             'jenis_kelamin' => 'required|in:Laki-Laki,Perempuan',
             'usia' => 'required|integer|min:10|max:100',
             'jumlah_rombongan' => 'required|string|max:50',
-            'bidang_tujuan' => 'required|string|max:255',
-            'keperluan' => 'required|string|max:255',
+            'keperluan' => 'required|string|max:1000',
             'no_whatsapp' => 'required|string|max:25',
         ];
 
-        // Validasi pertanyaan kustom aktif
-        $activeQuestions = FormQuestion::where('status', 'Aktif')->get();
+        // Validasi pertanyaan kustom aktif (hanya pertanyaan kustom non-sistem)
+        $activeQuestions = FormQuestion::where('status', 'Aktif')->whereNull('system_key')->get();
         $customAnswers = [];
         $jawabanInput = $request->input('jawaban', []);
 
@@ -73,7 +72,7 @@ class GuestBookController extends Controller
             'jenis_kelamin' => $validated['jenis_kelamin'],
             'usia' => $validated['usia'],
             'jumlah_rombongan' => $validated['jumlah_rombongan'],
-            'bidang_tujuan' => $validated['bidang_tujuan'],
+            'bidang_tujuan' => $request->input('bidang_tujuan', $validated['keperluan']),
             'keperluan' => $validated['keperluan'],
             'no_whatsapp' => $validated['no_whatsapp'],
             'jawaban_tambahan' => !empty($customAnswers) ? $customAnswers : null,
