@@ -3,7 +3,6 @@
 namespace App\Exports;
 
 use App\Models\Guest;
-use App\Models\FormQuestion;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -14,30 +13,15 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class GuestHistoryExport implements FromCollection, WithHeadings, WithMapping, WithTitle, WithEvents
 {
     protected ?string $search;
-    protected array $customQuestions = [];
     protected int $rowNumber = 0;
 
     public function __construct(?string $search = null)
     {
         $this->search = $search;
-
-        // Fetch all active/custom questions from database for headers
-        $questions = FormQuestion::whereNull('system_key')
-            ->orderBy('urutan', 'asc')
-            ->orderBy('id', 'asc')
-            ->get();
-
-        foreach ($questions as $q) {
-            $this->customQuestions[] = [
-                'id' => $q->id,
-                'pertanyaan' => $q->pertanyaan,
-            ];
-        }
     }
 
     public function collection(): \Illuminate\Support\Enumerable
@@ -66,35 +50,50 @@ class GuestHistoryExport implements FromCollection, WithHeadings, WithMapping, W
 
     public function headings(): array
     {
-        $headers = [
+        return [
             'No.',
             'Nama Lengkap',
             'Asal Instansi/Perusahaan',
-            'Bidang / Orang yang Ditemui',
-            'Jenis Kelamin',
+            'Bidang / Orang Ditemui',
+            'Gender',
             'Usia',
-            'Jumlah Rombongan',
+            'Rombongan',
             'Layanan & Keperluan',
-            'No. WhatsApp',
+            'No WhatsApp',
+            'Waktu Presensi (WITA)',
         ];
-
-        foreach ($this->customQuestions as $cq) {
-            $headers[] = $cq['pertanyaan'];
-        }
-
-        $headers[] = 'Waktu Presensi';
-
-        return $headers;
     }
 
     public function map($guest): array
     {
         $this->rowNumber++;
 
-        // Format WhatsApp strictly as string with leading apostrophe so Excel keeps formatting
+        // 1. Format Layanan & Keperluan (+ Jawaban Tambahan if present, exactly as in History Admin)
+        $keperluanText = $guest->keperluan ?? '-';
+
+        if (!empty($guest->jawaban_tambahan) && is_array($guest->jawaban_tambahan)) {
+            $extraAnswers = [];
+            foreach ($guest->jawaban_tambahan as $ans) {
+                $p = trim($ans['pertanyaan'] ?? '');
+                $j = trim($ans['jawaban'] ?? '');
+                if ($p !== '' && $j !== '') {
+                    $extraAnswers[] = "• {$p}: {$j}";
+                }
+            }
+            if (!empty($extraAnswers)) {
+                $keperluanText .= "\n\n[Jawaban Tambahan]:\n" . implode("\n", $extraAnswers);
+            }
+        }
+
+        // 2. Format WhatsApp strictly as string to prevent scientific notation
         $wa = $guest->no_whatsapp ? "'" . $guest->no_whatsapp : '-';
 
-        $row = [
+        // 3. Format Time Asia/Makassar (WITA)
+        $waktu = $guest->created_at
+            ? $guest->created_at->setTimezone('Asia/Makassar')->format('d/m/Y H:i:s') . ' WITA'
+            : '-';
+
+        return [
             $this->rowNumber,
             $guest->nama ?? '-',
             $guest->asal_instansi ?? '-',
@@ -102,42 +101,10 @@ class GuestHistoryExport implements FromCollection, WithHeadings, WithMapping, W
             $guest->jenis_kelamin ?? '-',
             $guest->usia ? $guest->usia . ' Thn' : '-',
             $guest->jumlah_rombongan ?? '-',
-            $guest->keperluan ?? '-',
+            $keperluanText,
             $wa,
+            $waktu,
         ];
-
-        // Process custom questions answers
-        $jawabanTambahan = is_array($guest->jawaban_tambahan) ? $guest->jawaban_tambahan : [];
-        $ansMapByQId = [];
-        $ansMapByPertanyaan = [];
-
-        foreach ($jawabanTambahan as $item) {
-            if (isset($item['question_id'])) {
-                $ansMapByQId[$item['question_id']] = $item['jawaban'] ?? '-';
-            }
-            if (isset($item['pertanyaan'])) {
-                $ansMapByPertanyaan[trim($item['pertanyaan'])] = $item['jawaban'] ?? '-';
-            }
-        }
-
-        foreach ($this->customQuestions as $cq) {
-            $ans = '-';
-            if (isset($ansMapByQId[$cq['id']])) {
-                $ans = $ansMapByQId[$cq['id']];
-            } elseif (isset($ansMapByPertanyaan[trim($cq['pertanyaan'])])) {
-                $ans = $ansMapByPertanyaan[trim($cq['pertanyaan'])];
-            }
-            $row[] = ($ans !== null && $ans !== '') ? $ans : '-';
-        }
-
-        // Time format Asia/Makassar
-        $waktu = $guest->created_at
-            ? $guest->created_at->setTimezone('Asia/Makassar')->format('d/m/Y H:i:s')
-            : '-';
-
-        $row[] = $waktu;
-
-        return $row;
     }
 
     public function registerEvents(): array
@@ -148,18 +115,15 @@ class GuestHistoryExport implements FromCollection, WithHeadings, WithMapping, W
                 $sheet = $event->sheet->getDelegate();
 
                 $highestRow = $sheet->getHighestRow();
-                $highestColumn = $sheet->getHighestColumn();
-                $highestColumnIndex = Coordinate::columnIndexFromString($highestColumn);
 
-                // Enable AutoFilter on header row
-                $sheet->setAutoFilter("A1:{$highestColumn}1");
+                // Enable AutoFilter on header row A1:J1
+                $sheet->setAutoFilter('A1:J1');
 
                 // Freeze Header Row
                 $sheet->freezePane('A2');
 
                 // Header Styling
-                $headerRange = "A1:{$highestColumn}1";
-                $sheet->getStyle($headerRange)->applyFromArray([
+                $sheet->getStyle('A1:J1')->applyFromArray([
                     'font' => [
                         'bold' => true,
                         'color' => ['rgb' => 'FFFFFF'],
@@ -184,9 +148,27 @@ class GuestHistoryExport implements FromCollection, WithHeadings, WithMapping, W
                 ]);
                 $sheet->getRowDimension(1)->setRowHeight(28);
 
+                // Explicit Column Widths matching History Admin layout
+                $widths = [
+                    'A' => 8,   // No.
+                    'B' => 25,  // Nama Lengkap
+                    'C' => 28,  // Asal Instansi/Perusahaan
+                    'D' => 28,  // Bidang / Orang Ditemui
+                    'E' => 15,  // Gender
+                    'F' => 10,  // Usia
+                    'G' => 16,  // Rombongan
+                    'H' => 45,  // Layanan & Keperluan
+                    'I' => 18,  // No WhatsApp
+                    'J' => 24,  // Waktu Presensi (WITA)
+                ];
+
+                foreach ($widths as $col => $width) {
+                    $sheet->getColumnDimension($col)->setWidth($width);
+                }
+
                 // Data Rows Styling
                 if ($highestRow > 1) {
-                    $dataRange = "A2:{$highestColumn}{$highestRow}";
+                    $dataRange = "A2:J{$highestRow}";
                     $sheet->getStyle($dataRange)->applyFromArray([
                         'font' => [
                             'size' => 10,
@@ -203,26 +185,14 @@ class GuestHistoryExport implements FromCollection, WithHeadings, WithMapping, W
                         ],
                     ]);
 
-                    // Alignments per column
+                    // Alignments
                     $sheet->getStyle("A2:A{$highestRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // No
                     $sheet->getStyle("E2:G{$highestRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Gender, Usia, Rombongan
-                    $sheet->getStyle("I2:I{$highestRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // WhatsApp
-                    $sheet->getStyle("{$highestColumn}2:{$highestColumn}{$highestRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // Waktu
+                    $sheet->getStyle("I2:J{$highestRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER); // WA, Waktu
 
-                    // Text wrap for long text columns
+                    // Text Wrap for long columns
                     $sheet->getStyle("B2:D{$highestRow}")->getAlignment()->setWrapText(true);
                     $sheet->getStyle("H2:H{$highestRow}")->getAlignment()->setWrapText(true);
-
-                    // Row Heights for data
-                    for ($r = 2; $r <= $highestRow; $r++) {
-                        $sheet->getRowDimension($r)->setRowHeight(22);
-                    }
-                }
-
-                // Auto Column Widths
-                for ($col = 1; $col <= $highestColumnIndex; $col++) {
-                    $colLetter = Coordinate::stringFromColumnIndex($col);
-                    $sheet->getColumnDimension($colLetter)->setAutoSize(true);
                 }
             },
         ];
