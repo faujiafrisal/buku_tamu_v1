@@ -42,10 +42,21 @@
                 </a>
             </div>
 
-            <!-- Form Presensi Link -->
-            <a href="{{ route('guestbook.index') }}" class="inline-flex items-center justify-center gap-1.5 py-2 px-3.5 rounded-xl bg-blue-900/10 dark:bg-blue-950/40 hover:bg-blue-900 hover:text-amber-400 text-blue-900 dark:text-blue-300 font-bold text-xs border border-blue-800/30 transition-all cursor-pointer">
-                <i class="fa-solid fa-plus text-xs"></i> Presensi
-            </a>
+            <!-- Form Presensi Link & Logout -->
+            <div class="flex items-center gap-2">
+                <span class="px-3 py-1.5 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-900 dark:text-blue-300 font-bold text-xs border border-blue-200 dark:border-blue-800 flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-user-shield text-amber-500"></i> Admin: <span class="text-blue-700 dark:text-blue-300 font-extrabold">{{ session('admin_username', 'admin') }}</span>
+                </span>
+                <form action="{{ route('admin.logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="py-1.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-600 text-rose-600 hover:text-white dark:text-rose-400 border border-rose-500/20 font-bold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-sm" title="Keluar dari sesi Administrator">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </form>
+                <a href="{{ route('guestbook.index') }}" class="inline-flex items-center justify-center gap-1.5 py-1.5 px-3.5 rounded-xl bg-blue-900/10 dark:bg-blue-950/40 hover:bg-blue-900 hover:text-amber-400 text-blue-900 dark:text-blue-300 font-bold text-xs border border-blue-800/30 transition-all cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-plus text-xs"></i> Presensi
+                </a>
+            </div>
         </div>
     </div>
 
