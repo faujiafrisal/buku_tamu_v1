@@ -7,6 +7,7 @@ Route::get('/', [GuestBookController::class, 'index'])->name('guestbook.index');
 Route::post('/guestbook', [GuestBookController::class, 'store'])->name('guestbook.store');
 Route::get('/admin', [GuestBookController::class, 'admin'])->name('guestbook.admin');
 Route::get('/admin/history', [GuestBookController::class, 'history'])->name('guestbook.history');
+Route::get('/admin/history/export', [GuestBookController::class, 'exportHistory'])->name('guestbook.history.export');
 Route::delete('/admin/history/{guest}', [GuestBookController::class, 'destroy'])->name('guestbook.destroy');
 
 // Kelola Pertanyaan Form

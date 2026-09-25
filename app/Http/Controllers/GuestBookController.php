@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Guest;
 use App\Models\FormQuestion;
+use App\Exports\GuestHistoryExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -160,6 +162,17 @@ class GuestBookController extends Controller
         $totalCount = Guest::count();
 
         return view('guestbook.history', compact('guests', 'todayCount', 'totalCount'));
+    }
+
+    /**
+     * Export full visit history to Excel file.
+     */
+    public function exportHistory(Request $request)
+    {
+        $search = $request->input('search');
+        $fileName = 'history_kunjungan_mpp_samarinda_' . Carbon::now()->format('Y-m-d') . '.xlsx';
+
+        return Excel::download(new GuestHistoryExport($search), $fileName);
     }
 
     /**

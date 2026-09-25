@@ -96,6 +96,11 @@
                         Reset
                     </a>
                 @endif
+                <a href="{{ route('guestbook.history.export', ['search' => request('search')]) }}"
+                    class="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap border border-emerald-500/30"
+                    title="Export seluruh data histori kunjungan ke Excel (.xlsx)">
+                    <i class="fa-solid fa-file-excel text-sm"></i> Export Excel
+                </a>
             </form>
         </div>
     </div>
